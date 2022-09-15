@@ -46,8 +46,6 @@
 
 ;;; Code:
 
-(require 'helm-core)
-
 (defun ezf-default (filename)
   "Complete candidates in FILENAME with `completing-read'."
   (completing-read-multiple
@@ -55,15 +53,6 @@
    (with-temp-buffer
      (insert-file-contents-literally filename nil)
      (string-lines (buffer-string) t))))
-
-
-(defun ezf-helm (filename)
-  "Complete candidates in FILENAME with `helm'."
-  ;; Uncomment if you want Helm to full screen.
-  (helm-set-local-variable 'helm-full-frame t)
-  (helm :sources
-        (helm-build-in-file-source "EZF Completion" filename
-          :action (lambda (_) (helm-marked-candidates)))))
 
 (defvar ezf-separators " "
   "Regexp of separators `ezf' should use to split a line.")
@@ -109,7 +98,7 @@ columns like \"1-\" or \"1-6\", otherwise it is specified as a string
 representing an integer e.g. \"1\".
 
 If COMPLETING-FN is nil default to `ezf-default'."
-  (when-let ((candidates (funcall (or completing-fn 'ezf-helm) filename)))
+  (when-let ((candidates (funcall (or completing-fn 'ezf-default) filename)))
     (ezf-1 candidates field)))
 
 (provide 'ezf)
