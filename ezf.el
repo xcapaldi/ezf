@@ -1,8 +1,9 @@
 ;;; ezf.el --- emacs fuzzy finder                    -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2022  Xavier Capaldi
 ;; Copyright (C) 2022  Mickey Petersen
 
-;; Author: Mickey Petersen <mickey at masteringemacs.org>
+;; Authors: Xavier Capaldi <xcapaldi at scribo.biz> and Mickey Petersen <mickey at masteringemacs.org>
 ;; Keywords: tools, tools
 
 ;; This program is free software; you can redistribute it and/or modify

@@ -1,0 +1,61 @@
+#+TITLE: Emacs Fuzzy Finder
+#+AUTHOR: Xavier Capaldi
+
+#+ATTR_HTML: width="400px"
+#+CAPTION: EZF with Vertico and Orderless completion style
+[[ezf-example-optimised.gif]]
+
+Emacs Fuzzy Finder is like [[https://github.com/junegunn/fzf][fzf]] but it leverages the power of your Emacs instance to filter and select candidates.
+
+Use ~ezf~ as part of your piping and command substitutions to manually select and filter matches.
+
+Here's an example:
+
+#+BEGIN_SRC sh
+sudo dnf install $(dnf search emacs | ezf -f 0)
+#+END_SRC
+
+This will search Fedora's package repository for anything with the word ~emacs~ in it -- yielding over 100 results.
+They're then passed to ~ezf~ and you're asked to filter and select candidates inside your own Emacs.
+The ones you select are sent *back* to the shell, and substituted into the call to ~dnf install~.
+You can play with the ~crm-seperator~ regexp if you want to use a different character than ~,~ to separate multiple selections.
+
+To better understand how it works, read Mikey Petersen's original article on [[https://www.masteringemacs.org/article/fuzzy-finding-emacs-instead-of-fzf][Fuzzy Finding with Emacs instead of fzf]].
+
+When making many selections, the completion buffer can become quite crowded.
+One option is to use the original repo with [[https://github.com/emacs-helm/helm][helm]] support.
+Another option might be to write a multiple completion framework similar to that done in [[https://github.com/emacs-citar/citar][citar]].
+However for most use-cases, the default completion system works well.
+
+** Why a fork
+This is a fork of Mikey Petersen's original implementation at [[https://github.com/mickeynp/ezf][mickeynp/ezf]].
+I created the fork initially to remove the dependency on the [[https://github.com/emacs-helm/helm][helm]] completion framework.
+Instead this version relies soley on the built-in completion frameworks/compatible frameworks.
+In particular it relies on ~completing-read-multiple~.
+I've tested with [[https://github.com/minad/vertico][Vertico]] with the [[https://github.com/oantolin/orderless][Orderless]] completion style and with the default completion framework.
+I suspect it would work fine with [[https://gitlab.com/protesilaos/mct/][MCT]] or [[https://github.com/radian-software/selectrum][Selectrum]].
+
+The bash script has also been converted to a posix-compliant shell script at the expense of losing ~-set o pipefail~.
+
+** How to Install
+*** manual
+1. Git clone the repo (or download)
+2. Load ~ezf.el~
+
+*** straight.el
+Alternatively if you use [[https://github.com/raxod502/straight.el][straight.el]] as your package manager, you can point it directly to the repository.
+
+#+BEGIN_SRC emacs-lisp
+(straight-use-package
+ '(ezf :type git :host github :repo "xcapaldi/ezf"))
+#+END_SRC
+
+*** straight.el + use-package
+#+BEGIN_SRC emacs-lisp
+(use-package ezf
+  :straight (ezf :type git :host github :repo "xcapaldi/ezf"))
+#+END_SRC
+
+** Shell script
+No matter the installation method for emacs, you need to put ~ezf~ somewhere in your ~PATH~.
+Make sure you run emacs as a daemon or use ~server-start~.
