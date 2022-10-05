@@ -4,7 +4,7 @@ set -o nounset -o errexit
 field=0-
 # the elisp function to use for completing read
 candidate_fn=ezf-default
-while getopts c:f: OPT; do
+while getopts c:f:m OPT; do
     case $OPT in
         c)
             candidate_fn=$OPTARG
@@ -26,9 +26,11 @@ trap 'rm -f -- "$ezftmp"' EXIT
 # xargs is there to strip the "" from the beginning and end of the
 # output from Emacs.  Ensure "field" is always passed as a string by
 # quoting it.
-selection=$(emacsclient -e "(progn (require 'ezf) (ezf \"$ezftmp\" \"$field\" #'$candidate_fn))" | xargs)
+selection=$(emacsclient -e "(ezf \"$ezftmp\" \"$field\" #'$candidate_fn)" | xargs)
 if [ "$selection" = "nil" ]; then
     exit 1
 else
    echo "$selection"
 fi
+
+

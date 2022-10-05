@@ -90,6 +90,7 @@
              candidates
              " "))
 
+;;;###autoload
 (defun ezf (filename &optional field completing-fn)
   "Wrapper that invokes COMPLETION-FN with FILENAME.
 
@@ -99,6 +100,7 @@ columns like \"1-\" or \"1-6\", otherwise it is specified as a string
 representing an integer e.g. \"1\".
 
 If COMPLETING-FN is nil default to `ezf-default'."
+  (raise-frame)
   (when-let ((candidates (funcall (or completing-fn 'ezf-default) filename)))
     (ezf-1 candidates field)))
 

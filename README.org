@@ -16,7 +16,7 @@ sudo dnf install $(dnf search emacs | ezf -f 0)
 #+END_SRC
 
 This will search Fedora's package repository for anything with the word ~emacs~ in it -- yielding over 100 results.
-They're then passed to ~ezf~ and you're asked to filter and select candidates inside your own Emacs.
+The first column is then passed to ~ezf~ and you're asked to filter and select candidates inside your own Emacs.
 The ones you select are sent *back* to the shell, and substituted into the call to ~dnf install~.
 You can play with the ~crm-seperator~ regexp if you want to use a different character than ~,~ to separate multiple selections.
 
@@ -37,6 +37,14 @@ I suspect it would work fine with [[https://gitlab.com/protesilaos/mct/][MCT]] o
 
 The bash script has also been converted to a posix-compliant shell script at the expense of losing ~-set o pipefail~.
 
+If ezf is invoked from a terminal external to emacs, the emacs frame will raise.
+However, I do not have a good method of returning the user to the original terminal after they make the selection in emacs.
+I tried using xdotool for this but it requires a dependency and wasn't super reliable across different terminals.
+
+#+BEGIN_SRC sh
+sudo dnf install $(dnf search emacs | ezf -m -f 0)
+#+END_SRC
+
 ** How to Install
 *** manual
 1. Git clone the repo (or download)
@@ -53,9 +61,10 @@ Alternatively if you use [[https://github.com/raxod502/straight.el][straight.el]
 *** straight.el + use-package
 #+BEGIN_SRC emacs-lisp
 (use-package ezf
-  :straight (ezf :type git :host github :repo "xcapaldi/ezf"))
+  :straight (ezf :type git :host github :repo "xcapaldi/ezf")
+  :commands ezf)
 #+END_SRC
 
-** Shell script
+*** Shell script
 No matter the installation method for emacs, you need to put ~ezf~ somewhere in your ~PATH~.
 Make sure you run emacs as a daemon or use ~server-start~.
